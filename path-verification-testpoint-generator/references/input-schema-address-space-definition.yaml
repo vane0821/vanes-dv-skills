@@ -1,0 +1,43 @@
+# 地址空间定义输入 Schema
+
+address_space_definition:
+  address_space:
+    name: "<address space name>"
+    range:
+      base: "<hex/int>"
+      limit: "<hex/int>"
+    minimum_access_granularity: "<bytes>"
+    coverage_statement: "<确认完整覆盖扫描范围>"
+
+  regions:
+    - region_name: "<Region / Domain name>"
+      slave_name: "<hardware Slave name>"
+      region_type: "<Memory | MMIO | FIFO | Mailbox | Other>"
+      address_range:
+        base: "<hex/int>"
+        limit: "<hex/int>"
+      internal_holes:
+        - name: "<hole name>"
+          range:
+            base: "<hex/int>"
+            limit: "<hex/int>"
+      address_constraints:
+        - constraint_id: "<id>"
+          legal_condition: "<expression>"
+      operation_constraints:
+        - constraint_id: "<id>"
+          legal_condition: "<expression>"
+
+  path_region_mapping:
+    - region_name: "<Region Name>"
+      path_name: "<Path Name>"
+      access: "<reachable | blocked | conditional>"
+      condition: "<condition required when access is conditional>"
+      notes: "<optional explanation>"
+
+  paths:
+    - path_name: "<Path Name>"
+      region_mapping:
+        - region_name: "<Region Name>"
+          access: "<reachable | blocked | conditional>"
+          condition: "<optional legal reachability condition>"

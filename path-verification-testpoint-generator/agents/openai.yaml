@@ -1,0 +1,3 @@
+display_name: 通路验证 Testpoint 生成器
+short_description: 生成通路验证 TP。
+default_prompt: 使用通路验证 Testpoint 生成器生成 TP

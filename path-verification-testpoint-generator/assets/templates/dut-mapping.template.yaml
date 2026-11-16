@@ -1,0 +1,10 @@
+dut_mapping:
+  regions:
+    - region_name: ""
+      hdl_path: ""
+  paths:
+    - path_name: ""
+      interface_path: ""
+      protocol_field_to_dut_signal: {}
+      expected_behavior_signals: {}
+  verification_strategy_mapping_rules: []

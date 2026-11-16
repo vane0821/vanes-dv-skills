@@ -1,0 +1,4 @@
+interface:
+  display_name: "VCS Instance Dummy Generation"
+  short_description: "Generate VCS instance-level dummy replacements"
+  default_prompt: "Use $vcs-instance-dummy-generation to generate a VCS dummy module and build configuration from top.v and a direct child instance name."

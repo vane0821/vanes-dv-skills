@@ -1,0 +1,4 @@
+interface:
+  display_name: "ST 验证设计分析"
+  short_description: "整理Path与Module ST TP的唯一结构化输入证据"
+  default_prompt: "读取设计文档、代码和人工确认，整理为同一份ST Verify TP唯一证据输入件，并列出当前校准问题。"

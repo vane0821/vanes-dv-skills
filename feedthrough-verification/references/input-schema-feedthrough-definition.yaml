@@ -1,0 +1,64 @@
+type: object
+required:
+  - feedthrough_definition
+properties:
+  feedthrough_definition:
+    type: object
+    required:
+      - source_endpoint
+      - target_endpoint
+      - signal_mapping_rules
+    properties:
+      source_endpoint:
+        type: object
+        required:
+          - module
+          - interface
+        properties:
+          module:
+            type: string
+          interface:
+            type: string
+          signal:
+            type:
+              - string
+              - "null"
+          clock_domain:
+            type: string
+      target_endpoint:
+        type: object
+        required:
+          - module
+          - interface
+        properties:
+          module:
+            type: string
+          interface:
+            type: string
+          signal:
+            type:
+              - string
+              - "null"
+          clock_domain:
+            type: string
+      signal_mapping_rules:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - source_signal
+            - target_signal
+          properties:
+            source_signal:
+              type: string
+            target_signal:
+              type: string
+            value_relation:
+              type: string
+              description: "可选；省略时表示 target_signal == source_signal"
+      verification_condition:
+        type: string
+      target_clock_observation_edge:
+        type: integer
+        minimum: 0

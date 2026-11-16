@@ -1,0 +1,25 @@
+feedthrough_tp:
+  TP_ID: "FT_A_IF0_TO_B_IF1"
+  lifecycle_status: "draft"
+  type: "Feedthrough"
+  source:
+    endpoint: "module_A.IF0"
+    clock_domain: "clk_a"
+  target:
+    endpoint: "module_B.IF1"
+    clock_domain: "clk_b"
+  signal_mapping:
+    - source_signal: "IF0.req"
+      target_signal: "IF1.valid"
+      value_relation: "IF1.valid == IF0.req"
+  verification_scenario: "IF0.req 有效"
+  verification_goal: |-
+    IF1.valid == IF0.req
+  coverage_strategy: "assertion"
+  coverage_strategy_mapping: "PROP_FT_A_IF0_TO_B_IF1"
+
+lifecycle_missing_input_report:
+  - affected_tp_id: "FT_A_IF0_TO_B_IF1"
+    lifecycle_status: "draft"
+    missing_content: "Target Clock Observation Edge"
+    completion_or_unblock_condition: "提供非负整数 N，例如第 1 个 Target Clock 有效边沿。"

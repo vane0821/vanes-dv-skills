@@ -1,0 +1,21 @@
+path_verification_testpoints:
+  MASTER_A_TO_MEMORY_A:
+    MEMORY_A:
+      地址映射正确性:
+        边界地址:
+          - TP_ID: "MASTER_A_TO_MEMORY_A_NORMAL_ADDRESS_001"
+            lifecycle_status: "complete"
+            verification_scenario: "READ，ADDR = 0x0000"
+            verification_goal: |-
+              下边界：0x0000
+              访问 REGION_0，返回协议定义的成功响应。
+            coverage_strategy: |-
+              cover bins：
+              boundary = {0x0000}
+
+              illegal bins：
+              无
+            coverage_strategy_mapping: "TODO（missing coverpoint name）"
+
+lifecycle_missing_input_report: []
+scope_missing_input_report: []

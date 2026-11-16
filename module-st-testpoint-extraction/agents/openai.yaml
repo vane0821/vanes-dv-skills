@@ -1,0 +1,4 @@
+interface:
+  display_name: "ST 模块 Testpoint 提取"
+  short_description: "提取、治理和审查模块级验证 Testpoint 与覆盖策略。"
+  default_prompt: "Use $module-st-testpoint-extraction to extract and review module-level verification testpoints from these design inputs."

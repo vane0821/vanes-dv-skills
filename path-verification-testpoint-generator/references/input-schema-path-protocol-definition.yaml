@@ -1,0 +1,45 @@
+# Path / Protocol Definition Input Schema
+
+path_protocol_definition:
+  paths:
+    - path_name: "<Path Name>"
+      master_name: "<hardware Master name>"
+      protocol_type: "<AXI | APB | Custom | other>"
+      supported_protocol_signals:
+        - "<signal / field name>"
+      path_constraints:
+        - constraint_id: "<id>"
+          constraint_name: "<name>"
+          fields: ["<protocol field>"]
+          legal_condition: "<expression>"
+          illegal_behavior_ref: "<rule id>"
+
+  standard_protocol_definitions:
+    - protocol_type: "<AXI | APB | other>"
+      interface_signals:
+        - name: "<protocol signal / field>"
+          semantic: "<standard semantic>"
+      operations:
+        - operation_name: "<READ | WRITE | BURST | etc.>"
+          required_fields: ["<field>"]
+      protocol_operation_constraints:
+        - constraint_id: "<id>"
+          constraint_name: "<name>"
+          fields: ["<protocol field>"]
+          legal_condition: "<expression>"
+          illegal_behavior_ref: "<rule id>"
+
+  custom_protocol_definitions:
+    - protocol_type: "<Custom protocol name>"
+      interface_signals:
+        - name: "<signal / field>"
+          semantic: "<project-defined semantic>"
+      operations:
+        - operation_name: "<operation>"
+          required_fields: ["<field>"]
+      operation_constraints:
+        - constraint_id: "<id>"
+          constraint_name: "<name>"
+          fields: ["<protocol field>"]
+          legal_condition: "<expression>"
+          illegal_behavior_ref: "<rule id>"

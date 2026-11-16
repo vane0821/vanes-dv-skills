@@ -1,0 +1,38 @@
+# 验证规则问答输入 Schema
+
+verification_rule_qa:
+  - rule_id: "<stable rule id>"
+    rule_category: "<Address Scan | Cross | Illegal Behavior | Coverage Sampling>"
+    rule_purpose: "<该规则的意图>"
+    question: "<给验证人员看的问题>"
+    answer_key: "<结构化字段名>"
+    answer: "<答案>"
+    applies_to_path: "<Path Name | * | optional>"
+    applies_to_region: "<Region Name | * | optional>"
+    applies_to_category: "<Verification Category | optional>"
+    applies_to_subcategory: "<Sub-category | optional>"
+    notes: "<optional>"
+
+# 常用 answer_key：
+# Address Scan: address_stimulus_count_method, address_stimulus_sampling_threshold,
+# small_address_stimulus_policy, large_address_stimulus_policy, typical_address
+# Cross: applies_to_category, applies_to_subcategory, cross, address_candidate_types, operation_candidate_types
+# Illegal Behavior: applies_to_path, applies_to_region, applies_to_category, applies_to_subcategory, expected_behavior
+# Coverage Sampling: coverpoint_id, covers, selection_rule
+
+
+# answer 示例：
+# address_stimulus_count_method       -> Address Range / Minimum Access Granularity
+# address_stimulus_sampling_threshold -> 1000
+# small_address_stimulus_policy       -> Exhaustive Scan
+# large_address_stimulus_policy       -> Typical Address Rule
+# cross                    -> Address x Operation
+# address_candidate_types  -> 边界地址 或 多行：边界地址
+典型地址
+# operation_candidate_types -> 地址对齐
+# applies_to_path          -> * 或 axi_m0
+# applies_to_region        -> * 或 SRAM_A
+# expected_behavior        -> RRESP == DECERR / PSLVERR == 1
+# coverpoint_id            -> cp_sram_boundary
+# covers                   -> SRAM_A 边界地址扫描
+# selection_rule           -> 选取最小与最大边界地址作为代表候选

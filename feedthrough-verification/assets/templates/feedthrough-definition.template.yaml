@@ -1,0 +1,20 @@
+feedthrough_definition:
+  source_endpoint:
+    module: "module_A"
+    interface: "IF0"
+    signal: null
+    clock_domain: "clk_a"
+  target_endpoint:
+    module: "module_B"
+    interface: "IF1"
+    signal: null
+    clock_domain: "clk_b"
+  signal_mapping_rules:
+    - source_signal: "IF0.req"
+      target_signal: "IF1.valid"
+      value_relation: "IF1.valid == IF0.req"
+    - source_signal: "IF0.data"
+      target_signal: "IF1.data"
+      value_relation: "IF1.data == IF0.data"
+  verification_condition: "IF0.req 有效"
+  target_clock_observation_edge: 1

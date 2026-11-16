@@ -1,0 +1,33 @@
+verification_rules:
+  address_scan_rules:
+    rule_id: "addr_scan_default_001"
+    rule_purpose: ""
+    address_stimulus_sampling:
+      count_method: "Address Range / Minimum Access Granularity"
+      threshold: 1000
+      within_threshold_policy: "Exhaustive Scan"
+      above_threshold_policy: "Typical Address Rule"
+    typical_address_rules: []
+  cross_rules:
+    - rule_id: "cross_<goal>_001"
+      rule_purpose: ""
+      verification_goal: ""
+      cross: ""
+      address_candidate_types: []
+      operation_candidate_types: []
+  illegal_behavior_rules:
+    - rule_id: "illegal_<reason>_default_001"
+      rule_purpose: ""
+      applies_to:
+        path: "*"
+        region: "*"
+        category: ""
+        sub_category: ""
+      expected_behavior: ""
+  coverage_sampling_rules:
+    existing_coverpoints: []
+    representative_candidate_rules:
+      - rule_id: "sampling_<domain>_001"
+        rule_purpose: ""
+        applies_to: ""
+        selection_rule: ""

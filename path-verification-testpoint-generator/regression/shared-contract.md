@@ -1,0 +1,67 @@
+# Shared Contract Regression
+
+- 正式 TP 只使用 `complete`、`draft`、`blocked`。
+- candidate 只用于内部 generation scope，不进入 `lifecycle_status`。
+- 已成立但缺行为语义的 TP 保留为 draft，并进入 lifecycle missing-input report。
+- 地址目标与 bins 使用共享 Address Coverage Contract；Path 只补充路由、对齐、操作和协议响应。
+- schema、模板、generator 与 push adapter 的字段转换一致。
+- 新建 Base Testpoints 表使用共享正式字段名；既有旧表只允许由 push compatibility adapter 做边界映射，不反向改变正式 TP 文件。
+- 非法行为缺失时保留 draft TP；仅缺 implementation binding 时保持 complete 并写 mapping TODO。
+- `address_stimulus_sampling_threshold` 只影响 candidate selection；`coverage_bin_expansion_limit` 只影响 bins 表达。
+- TP_ID 唯一表达 Master、Slave、`NORMAL | ILLEGAL | RESERVED` 和 operation。
+- 正常可读写 Path 访问引用共享 Access RAW Contract；Path 不复制四组模式，也不承担寄存器 field access semantic。
+- 软件地址形成和纯存储功能不作为 Path TP；地址 TP 使用 Master 接口硬件可见范围。
+- Path TP 默认由 testcase 构造并检查访问、由 covergroup 完成覆盖闭合；assertion 仅在输入明确要求协议或时序不变量时追加。
+- `ILLEGAL` / `RESERVED` TP 的 `verification_scenario` 明确 Master、Slave、operation 和具体非法原因；TP_ID 中的 access class 不替代场景。
+- 人工输入可维护在一个统一工作簿中，但设计事实、验证决策与实现绑定必须分表；转换后仍形成 AddressSpace、PathProtocol、DUTMapping 和 VerificationRules 四类独立机器输入。
+- 人工工作簿表名使用中文；来源、版本和校准状态作为各业务行的公共字段，不建立独立证据表。
+- decoder window 与真实有效容量不得合并；`地址区域` 一行表达一个连续的合法、保留、空洞或别名区间，并用区域组 ID 组织同一 target window。
+- 不同地址观察者视角不得混入同一 Path/Region 范围；默认建成不同 Path。软件地址形成规则不自动进入 Path TP。
+- AXI→APB 等内部转换实现不进入 Path TP；只有外部合法请求约束和验证端可观察行为进入通路、地址区域或行为规则。
+- 合法操作条件默认由通路条件与区域条件合并，不提前建立独立约束表。
+# Unified workbook v1 assertions
+
+- 人工输入固定为 `基础信息`、`通路与地址空间`、`验证规则`、`DUT映射`、`校准问题` 五个 Sheet。
+- 通路行 ID 符合 `<master>2<slave或region>_<legal|illegal|conditional>_<三位编号>`，不存在重复的空间合法性列。
+- `确认状态`只有`已确认`、`待确认`；待确认行引用具体校准问题，不出现“部分确认”。
+- 验证规则是固定有限选择题，工程选择必须属于可选项。
+- 当前 DUT 映射粒度是 Module 例化链；未选择 assertion 时不强制逐信号映射。
+- 支持的访问粒度是全部支持值，不退化为最小访问粒度。
+- `通路与地址空间`显式包含 Master 列并允许纵向合并；读取时合并值向下继承，且必须与通路 ID 中的 master 一致。
+- 多 Master 项目不得遗漏独立地址视角；Bach Core 样例同时包含 SCP CTRL 全局地址和 RV Core 本地地址。
+- 操作统一使用 `R`、`W`、`RW`；非法空间列名必须是`测试操作`而不是`允许操作`，避免把负向刺激误读成合法能力。
+- Custom Master 的基础信息可追加协议定义区；请求握手、R/W类型、地址、数据和返回字段必须可定位，非当前交叉目标的标识字段不得自动扩展 TP。
+- `校准问题`只包含当前未解决项，不作为历史台账；重新生成工作簿时从 `Q_001` 连续编号，并同步更新业务表中的全部引用。
+- 同一 Master 存在多套目标接口时，`通路与地址空间`必须逐行引用`通路协议`；自定义协议至少覆盖请求/返回握手、地址、数据、mask和错误字段，不能只记录入口协议。
+- 任务级路径选择、段使能、全局地址截取、长度单位与对齐约束属于 Path 合法条件；不得把任务长度单位误写成底层总线 beat 粒度。
+- 地址候选遵守4KiB阈值规则；大Region使用确定性定向集合，不做地址×操作无差别全交叉；SCP合法访问分别检查RRESP/BRESP为OKAY。
+- 已确认纳入的Dummy Path不得因内部功能为空而从输入件删除；接口完整性作为已知事实，缺失的功能实现按TP Lifecycle或implementation TODO处理。
+- 校准问题必须精确到具体Path/协议、待确认字段和可直接回答的选择，不允许使用“地址空间不明确”或“协议语义不明确”这类宽泛问题。
+- ST层不可见的lane、乱序、队列和多未决调度不得进入Path TP输入或校准问题；只保留外部可观察的完成、数据与错误语义。
+- 同一Master→Slave下的data/scale等访问方式不自动拆Region；Bach Core的DSA视角合并为一个Matrix Memory Region，SCP视角仍按两个地址分段建Region。
+- 内部候选语义必须区分`合法访问`、`非法访问`与`通路特性`，不得按来源Sheet直接分类；人工表映射为`通路功能特性/通路性能特性`三级场景树。
+- 每条已归一化且可独立激励、判定和覆盖的Path Feature生成一条通路特性TP；原始行混合多个行为时先拆Feature，同义多行则合并证据。
+- `地址合法`覆盖Region地址抽样；访问粒度和READ/WRITE能力归`操作合法`。共享的`transfer_mode`与Segment使能若已有配置/异常TP承接，则Path只引用前置条件，不重复生成，也不为此重新引入Module TP。
+- 非法地址TP生成前必须证明Master可通过正常可编程接口发出该刺激；仅能由非法配置或force产生时分流到异常TP，结构上不可达时不生成，证据不足时只输出Missing Input。
+- 非法访问被用户明确延期时保留一条浅红底`非法访问｜待展开`阻塞占位，不展开或猜测具体非法TP。
+- 同一行混合地址、长度、对齐、模式或使能等独立失败原因时必须拆分；不能唯一拆分时进入 Missing Input，不生成笼统 complete TP。
+- `测试操作=RW`且读写条件、预期行为和方法相同时只生成一条 READ/WRITE TP；仅存在语义差异时拆分。
+- Region合入Path单元格，固定格式为`<Path>\n（<Region地址范围及容量>）`；连续相同的Path+Region纵向合并，不保留独立Region列。
+- 人工表使用`TP层级1/2/3`，编号采用`1/1.1/1.1.1`；每个分类节点独占一行并逐级换列缩进，父节点行不得携带TP_ID、场景、映射或状态，只有叶子行承载正式TP。
+- 默认树将单次合法/非法访问、多事务访问、响应与顺序置于`通路功能特性`，峰值吞吐、精确最大Outstanding和延迟上限置于`通路性能特性`。
+- `地址合法`生成带场景标签的地址抽样；READ/WRITE与访问粒度分别生成相邻的`操作合法`TP，三者优先共享同一个Testcase，不做全地址×全粒度交叉。
+- Inside Data Path默认分别生成访问粒度、基础MEM读、基础MEM写和RAW综合交叉TP；RAW位于多事务访问，不替代基础R/W。IO/MMIO不强制RAW。
+- RAW大Cross包含地址样本、写粒度、读粒度、Lane和Mask，并约束读字节集合包含于写字节集合。
+- 地址抽样与访问粒度可被基础MEM读、MEM写和RAW共同引用，但三类Testcase职责分离；RAW继续覆盖同粒度与异粒度组合，异粒度要求write_size>read_size、读范围包含于写范围。
+
+- 完整输出工作簿首页必须包含`TP提取Flow`，展示设计分析证据、F1~F7提取流程、Top Path/Inside Data Path/Inside Ctrl Path映射及统一分类树。
+- Path类型由外部/内部边界和Slave类型判定，不得由名称猜测；目标类型不唯一时输出scope missing-input。
+- 验证映射使用`sample_if`指向设计分析接口对象；合法输入空间使用covergroup，时序/反压不变量使用assertion并配cover property，跨请求归属和顺序使用scoreboard；表达式必须直接引用接口信号。
+- 大规模等差LEN域覆盖上下边界和中间随机合法值；编码0若表示Segment未参与，不得当作0 Byte访问粒度。
+- 地址对齐采用输入协议定义，不对Custom协议强套`addr % size == 0`，协议无size字段时不得虚构size。
+- 合法地址TP与合法操作TP可以引用同一个Testcase；写后读和数据模式是Testcase/check方法，不作为子类别。
+- 大Region默认定向地址集合为下边界、按最小实际footprint/对齐计算的上边界合法起始地址和Bank代表地址；典型/随机仅在输入明确要求时生成。
+- 已知Bank数量但缺少Master地址到Bank公式时不得猜代表地址；有限LEN步进须显示完整紧凑集合及最大值。
+- 中文表格把canonical lifecycle映射为`完整/草稿/阻塞`，并独立维护`测试状态`与`覆盖状态`；完整不得自动等于已测试或已覆盖。
+- 中文表格不单列验证目标，其有效语义并入TP场景；Testcase独立成列；不展示覆盖策略列，使用`验证映射`统一承载covergroup、assertion和scoreboard绑定。
+- 关键输入缺失导致场景、预期或覆盖映射无法闭合时使用`阻塞`；`草稿`只表示输入充分但内容尚未整理完成。

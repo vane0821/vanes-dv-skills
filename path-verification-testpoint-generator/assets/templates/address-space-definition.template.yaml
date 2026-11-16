@@ -1,0 +1,30 @@
+address_space_definition:
+  address_space:
+    name: ""
+    range:
+      base: ""
+      limit: ""
+    minimum_access_granularity: ""
+    coverage_statement: ""
+  regions:
+    - region_name: ""
+      slave_name: ""
+      region_type: ""
+      address_range:
+        base: ""
+        limit: ""
+      internal_holes: []
+      address_constraints: []
+      operation_constraints: []
+  path_region_mapping:
+    - region_name: ""
+      path_name: ""
+      access: ""
+      condition: ""
+      notes: ""
+  paths:
+    - path_name: ""
+      region_mapping:
+        - region_name: ""
+          access: ""
+          condition: ""

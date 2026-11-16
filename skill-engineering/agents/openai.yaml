@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Engineering"
+  short_description: "创建、审查、演进并治理可复用 Skill 的工程方法"
+  default_prompt: "使用 $skill-engineering 判断、创建、审查或修改一个 Skill，并验证语义回归。"

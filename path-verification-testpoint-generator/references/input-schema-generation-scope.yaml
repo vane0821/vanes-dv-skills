@@ -1,0 +1,8 @@
+# 生成范围输入 Schema
+
+generation_request:
+  generation_scope: "<address_scan | path_reachability | operation_scan | address_operation_cross | illegal_behavior | verification_strategy_mapping | missing_input_analysis | full_testpoint>"
+  output_status_policy:
+    candidate: "仅用于中间 scope 的内部对象，不写入正式 TP lifecycle_status"
+    formal_tp: "full_testpoint 输出 complete | draft | blocked"
+    missing_input: "报告类型，不是 TP lifecycle_status"

@@ -1,0 +1,46 @@
+# Core Regression Contract
+
+- 同一工作簿同时承载Path Profile与Module Profile，不拆成两份输入件。
+- `输入件描述与分析`合并设计来源、人工讨论历史和验证规则；独立`接口分析`Sheet承载Top通道与内部通道；验证平台文件及DUT映射检查位于独立`平台映射`Sheet。
+- `校准问题`永远是最后一张Sheet且只保留未解决项；数据区自动换行且不使用问题高亮。
+- 每个Module一张Sheet，固定分为MMIO信息、接口信息、编程示例和Feature。
+- Dynamic Input从接口信息分析，不复制为独立证据表。
+- 对象关系与约束由Feature分类承载，不复制为独立关系表。
+- Path特性只有特性ID，不建立特性组ID。
+- AXI/APB Path按固定协议清单填写全部必填特性；资料缺失产生`tbd`特性行和校准问题，不能缺行。
+- `AXLEN width`、`AXLEN value`和`max burst beats`不得混用。
+- Path特性到Path、Module Feature到Path分别有唯一权威关系和一致的反向展示。
+- Sheet顺序为`输入件描述与分析 → 接口分析 → Path特性 → 通路与地址空间 → Module... → 存储信息（适用时） → 平台映射 → 校准问题`。
+- Path特性关联`Master→Slave`通路描述，不关联legal/illegal地址分段ID。
+- 每条逻辑Path至少关联一项Path特性；Custom Path必须从接口契约提取ST可见特性，未知项建`tbd`而不是漏项。
+- 每条条件合法地址分段按独立失败条件具有illegal对偶；非法可观察行为无证据时关联校准问题。
+- 地址型illegal必须由Module地址窗口求补集并写出具体区间；已有地址证据时禁止使用笼统“未实现空洞”。
+- 每条合法Master→Slave通路必须有Master视角写能力规则，选项仅为`支持普通RAW`、`支持写但不支持普通RAW`、`只读`、`待确认`；不得用寄存器Access直接代替结论。
+- 普通RAW必须填写Master视角RAW mask；副作用写mask为`0x00000000`且指向专项case；只读为`N/A`；待确认为`TBD`并关联问题。一个寄存器默认一个mask，多mask必须分别写明条件。
+- Memory写能力规则必须包含支持size和被访问byte mask全有效语义，且不得写入`mmio_write_mask.vmem`。
+- 自定义协议和通路表的连续相同展示项应合并。
+- `接口分析`中同一通道的A:H通道级字段必须分列纵向合并；I:M接口明细保持逐行，不得合并。
+- `接口分析`合并区顶部对齐并自动换行；Top/内部通道仅A:H分别使用浅蓝/浅绿底，I:M使用白底深色正文；待确认黄色高亮不得被覆盖。
+- 未经输入定义不得猜测size、响应、地址、Feature或Module语义。
+- 存在系统基地址时，MMIO同时保留绝对地址和局部Offset；不得把地址拼接责任留给TP生成器。
+- 数组MMIO必须包含Count、索引范围和stride，不得只保留`xx`等占位符。
+- MMIO按上下两个独立分段组织：`寄存器信息`一行一个寄存器，`字段信息`一行一个Field；字段行显式携带Register ID和Register对象。
+- Write Mask只允许出现在寄存器信息段，每个寄存器只有一个寄存器级Write Mask；禁止横向“寄存器列 + 字段列”的组合宽表。
+- `Width`仅表示MMIO容器宽度，不得自动扩展Field有效位；文档有效bit小于Width时，Field按证据收窄，容器剩余位明确为Reserved/写忽略/硬件维护。
+- 每个寄存器必须通过`Width/有效bit/Field/Write Mask/RAW预期值`闭环：Field不越界，Mask等于有效可写Field并集且不覆盖保留位；Mask非全宽时普通RAW不得写`rdata=wdata`。只有有效bit数量而位位置不明时必须待确认，禁止默认从bit0连续铺开。
+- 每个Module Sheet均使用独立`Access`与`Write Mask`列；只读为`N/A`，未知可写Mask为`TBD（Q_xxx）`，不得使用合并列或以0代替未知值。
+- 每个寄存器必须同时区分`寄存器有效写位`与Master视角Write Mask；后者必须按Master横向拆成独立列，禁止把多个Master合并在同一单元格，也禁止把寄存器级Mask无证据复制到所有Master。Master明确不可写时使用`0x00000000（不可写）`并匹配非法写或专项策略。
+- Field位宽不得直接等同于合法值空间；index/length/address/opcode/selector等字段必须有合法域、条件公式与非法行为。合法值和非法值分别映射`raw_check_legal_value`与`illegal_value_check`；非法行为未定义必须关联Q并禁止普通Mask比较。
+- Master视角权限或Mask不同的寄存器必须高亮差异列及依据；依据必须引用`SRC_xxx（章节）`或`DISC_xxx`，人工确认不得编号为SRC。
+- `*_mmio_reset.vmem`作为`PM_SRC_xxx`平台输入，并映射到对应Module Reset一致性检查，不得作为设计证据。
+- `mmio_write_mask.vmem`必须作为独立`PM_SRC_xxx`平台输入，并逐地址映射到全部已确认`raw_check`寄存器；每次工作簿更新均重新检查并记录revision，缺项或Mask差异必须显示为平台不一致，禁止用平台旧值覆盖设计分析。
+- 编码表引用必须定位文档章节；所有分析不准确、TBD/待确认/Q_xxx业务行必须高亮，但校准问题Sheet本身不得高亮。
+- 验证平台公共定义、UVM TB、参考模型和Checker实现使用`PM_SRC_xxx`登记，只用于一致性检查，不得作为`SRC_xxx`设计来源或反向覆盖设计分析。
+- 人工讨论必须在下次生成时定向映射到设计文档或验证规则；映射后保留灰色失效记录，业务行不得继续引用。
+- `讨论映射`仅用于人工输入，设计来源行必须留空；只有明确失效的讨论标灰，有效人工确认保持普通样式。
+- 设计来源使用按展示顺序连续且唯一的`SRC_xxx`，一行一来源；人工讨论使用独立连续的`DISC_xxx`，平台输入使用`PM_SRC_xxx`，三类号段不得混用或产生`TMP_SRC_xxx`。
+- 无复位定义不得归纳为0：明确无复位标为`无复位（已确认）`；证据缺失标为`无复位（Q_xxx）`并生成校准问题。
+- 文档修订说明与旧表冲突时，有独立设计输入或RTL佐证才采用更新值；否则保留冲突问题。
+- 从旧Path输入件迁移时保留全部Path、Region、地址视角、合法性、扫描规则、响应和DUT映射。
+- 存在Memory对象或后门初始化需求时，必须建立`存储信息`，包含存储组织、按Master访问视图和后门初始化条件三段。
+- 后门初始化不得由总容量和Bank数猜测；只有层次路径、Bank/Row/Macro映射、数据位序和ECC/Parity/Mask元数据全部闭合时，才允许标记`可直接生成=是`。

@@ -1,0 +1,53 @@
+# 验证规则输入 Schema
+
+# rule_id 填写建议：<规则类别缩写>_<对象或目标>_<序号>
+# 示例：addr_scan_default_001, cross_addr_alignment_001,
+# illegal_oob_default_001, sampling_boundary_001, target_assertion_001
+
+verification_rules:
+  address_scan_rules:
+    rule_id: "addr_scan_<scope>_<NNN>"
+    rule_purpose: "<这条地址扫描规则的用途说明>"
+    address_stimulus_sampling:
+      count_method: "Address Range / Minimum Access Granularity"
+      threshold: "<address stimulus candidate count threshold>"
+      within_threshold_policy: "<Exhaustive Scan | rule id>"
+      above_threshold_policy: "<Typical Address Rule | Sampling Rule id>"
+    typical_address_rules:
+      - rule_id: "addr_scan_typical_<scope>_<NNN>"
+        rule_purpose: "<典型地址选择依据>"
+        applies_to:
+          path: "<Path Name | *>"
+          region: "<Region Name | *>"
+        addresses:
+          - name: "<typical address name>"
+            value: "<hex/int>"
+            reason: "<why this address is typical>"
+
+  cross_rules:
+    - rule_id: "cross_<goal>_<NNN>"
+      rule_purpose: "<为什么该目标需要 Address × Operation 或不需要>"
+      verification_goal: "<Category/Sub-category>"
+      cross: "<Address | Operation | Address x Operation>"
+      address_candidate_types: ["<candidate type>"]
+      operation_candidate_types: ["<candidate type>"]
+
+  illegal_behavior_rules:
+    - rule_id: "illegal_<reason>_<scope>_<NNN>"
+      rule_purpose: "<非法条件成立时为什么应产生该行为>"
+      applies_to:
+        path: "<Path Name | *>"
+        region: "<Region Name | *>"
+        category: "<Verification Category>"
+        sub_category: "<Sub-category | *>"
+      expected_behavior: "<concrete DUT behavior expression>"
+
+  coverage_sampling_rules:
+    existing_coverpoints:
+      - coverpoint_id: "<id>"
+        covers: "<candidate domain expression>"
+    representative_candidate_rules:
+      - rule_id: "sampling_<domain>_<NNN>"
+        rule_purpose: "<为什么用该规则选代表候选>"
+        applies_to: "<candidate domain>"
+        selection_rule: "<explicit deterministic representative selection rule>"

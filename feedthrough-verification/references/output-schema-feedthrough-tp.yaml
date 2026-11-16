@@ -1,0 +1,74 @@
+type: object
+properties:
+  feedthrough_tp:
+    type: object
+    required:
+      - TP_ID
+      - lifecycle_status
+      - type
+      - source
+      - target
+      - signal_mapping
+      - coverage_strategy
+      - coverage_strategy_mapping
+    properties:
+      TP_ID:
+        type: string
+      lifecycle_status:
+        enum: [complete, draft, blocked]
+      type:
+        const: "Feedthrough"
+      source:
+        type: object
+        required:
+          - endpoint
+      target:
+        type: object
+        required:
+          - endpoint
+      signal_mapping:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required: [source_signal, target_signal, value_relation]
+      verification_scenario:
+        type: string
+      verification_goal:
+        type: string
+      coverage_strategy:
+        oneOf:
+          - const: assertion
+          - type: array
+            uniqueItems: true
+            items:
+              enum: [assertion, testcase, covergroup]
+            contains:
+              const: assertion
+      coverage_strategy_mapping:
+        type: string
+    allOf:
+      - if:
+          properties:
+            lifecycle_status:
+              const: complete
+        then:
+          required: [verification_scenario, verification_goal]
+          properties:
+            source:
+              required: [endpoint, clock_domain]
+            target:
+              required: [endpoint, clock_domain]
+  lifecycle_missing_input_report:
+    type: array
+    items:
+      type: object
+      required: [affected_tp_id, lifecycle_status, missing_content, completion_or_unblock_condition]
+  scope_missing_input_report:
+    type: array
+    items:
+      type: object
+      required: [missing_content, affected_scope, required_input]
+anyOf:
+  - required: [feedthrough_tp]
+  - required: [scope_missing_input_report]

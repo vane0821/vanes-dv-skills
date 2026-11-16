@@ -1,0 +1,6 @@
+interface:
+  display_name: "Feedthrough Verification"
+  short_description: "生成 Feedthrough TP 与 Property"
+  default_prompt: "使用 $feedthrough-verification 根据 Feedthrough Definition 生成 Feedthrough TP 和 Property。"
+policy:
+  allow_implicit_invocation: true

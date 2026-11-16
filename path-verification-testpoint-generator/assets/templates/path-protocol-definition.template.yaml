@@ -1,0 +1,9 @@
+path_protocol_definition:
+  paths:
+    - path_name: ""
+      master_name: ""
+      protocol_type: ""
+      supported_protocol_signals: []
+      path_constraints: []
+  standard_protocol_definitions: []
+  custom_protocol_definitions: []

@@ -1,0 +1,24 @@
+# DUT Mapping Input Schema
+
+dut_mapping:
+  regions:
+    - region_name: "<Region Name>"
+      hdl_path: "<dut HDL path>"
+
+  paths:
+    - path_name: "<Path Name>"
+      interface_path: "<dut interface path>"
+      protocol_field_to_dut_signal:
+        "<Protocol Field>": "<dut signal path>"
+      expected_behavior_signals:
+        "<Behavior Signal / Field>": "<dut signal path>"
+
+  verification_strategy_mapping_rules:
+    - rule_id: "target_<target-kind>_<NNN>"
+      rule_purpose: "<target mapping rule purpose>"
+      applies_to:
+        category: "<Verification Category>"
+        sub_category: "<Sub-category or *>"
+      verification_strategy: "<coverpoint | assertion | testcase>"
+      required_dut_signals:
+        - "<dut signal path or behavior field>"

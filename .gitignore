@@ -1,0 +1,25 @@
+# Local repositories and editor files
+.git/
+.DS_Store
+Thumbs.db
+~$*
+*.tmp
+
+# Secrets and credentials
+.env
+*.env
+*.key
+*.pem
+*.pfx
+
+# Generated logs and caches
+*.log
+__pycache__/
+*.pyc
+node_modules/
+
+# Local review and generated workbooks
+module-st-testpoint-extraction/agents/*.xlsx
+
+# Path tool runtime artifacts
+path-verification-testpoint-generator/tools/

@@ -1,0 +1,24 @@
+# 通路验证正式 Testpoint 输出 Schema
+
+path_verification_testpoints:
+  "<Path 名称>\n（<Region 地址范围及容量>）":
+    "<TP层级1，例如 1 通路功能特性>":
+      "<TP层级2，例如 1.1 单次合法访问>":
+        "<TP层级3，例如 1.1.1 地址合法｜抽样>":
+          - TP_ID: "<MASTER>_TO_<SLAVE>_<NORMAL | ILLEGAL | RESERVED>_<OPERATION>_<NNN>"
+            lifecycle_status: "<complete | draft | blocked>"
+            verification_scenario: "<实际访问条件>"
+            verification_goal: "<对象、条件及具体 DUT 预期>"
+            coverage_strategy: "<testcase | assertion | structured bins>"
+            coverage_strategy_mapping: "<实现对象 | TODO（missing 具体 implementation input）>"
+
+lifecycle_missing_input_report:
+  - affected_tp_id: "<TP_ID>"
+    lifecycle_status: "<draft | blocked>"
+    missing_content: "<缺失内容>"
+    completion_or_unblock_condition: "<补充条件>"
+
+scope_missing_input_report:
+  - missing_content: "<候选对象尚未成立所缺内容>"
+    affected_scope: "<path / region / TP层级节点>"
+    required_input: "<需要补充的输入>"
